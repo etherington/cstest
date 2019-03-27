@@ -1,0 +1,126 @@
+﻿@model CommentSold.WebTest.Services.PagedList<CommentSold.WebTest.Dto.InventoryDto>
+
+@{
+    ViewData["Title"] = "GetInventoryForUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Get Inventory For User</h1>
+
+<form asp-action="GetInventoryForUser"
+      asp-route-maximumQuantity="@ViewData["MaximumQuantityFilter"]"
+      asp-route-sku="@ViewData["SkuFilter"]"
+      asp-route-productId="@ViewData["ProductIdFilter"]"
+      method="get">
+    <div>
+        <p>
+            Find by SKU: <input type="text" name="sku" value="@ViewData["SkuFilter"]" />
+        </p>
+    </div>
+    <div>
+        <p>
+            Filter by ProductId: <input type="text" name="productId" value="@ViewData["ProductIdFilter"]" />
+        </p>
+    </div>
+    <div>
+        <p>
+            Only show if quantity is less than: <input type="text" name="MaximumQuantity" value="@ViewData["MaximumQuantityFilter"]" />
+            <input type="submit" value="Search" class="btn" /> |
+            <a asp-action="GetInventoryForUser">Back to Full List</a>
+        </p>
+    </div>
+</form>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Product Id
+        </th>
+        <th>
+            Product Name
+        </th>
+        <th>
+            Sku
+        </th>
+        <th>
+            Quantity
+        </th>
+        <th>
+            Color
+        </th>
+        <th>
+            Size
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            Cost
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sku)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Color)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Size)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriceInDollars)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CostInDollars)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+    var prevDisabled = !Model.HasPrevious ? "disabled" : "";
+    var nextDisabled = !Model.HasNext ? "disabled" : "";
+    var currentShownLow = (Model.PageSize) * (Model.CurrentPage - 1) + 1;
+    var currentShownHigh = currentShownLow + Model.PageSize - 1;
+    if (currentShownHigh > Model.TotalCount)
+    {
+        currentShownHigh = Model.TotalCount;
+    }
+}
+<a asp-action="GetInventoryForUser"
+   asp-route-pageNumber="@(Model.CurrentPage - 1)"
+   asp-route-pageSize="@(Model.PageSize)"
+   asp-route-maximumQuantity="@ViewData["MaximumQuantityFilter"]"
+   asp-route-productId="@ViewData["ProductIdFilter"]"
+   asp-route-sku="@ViewData["SkuFilter"]"
+   class="btn @prevDisabled">
+    Previous
+</a>
+<a asp-action="GetInventoryForUser"
+   asp-route-pageNumber="@(Model.CurrentPage + 1)"
+   asp-route-pageSize="@(Model.PageSize)"
+   asp-route-maximumQuantity="@ViewData["MaximumQuantityFilter"]"
+   asp-route-productId="@ViewData["ProductIdFilter"]"
+   asp-route-sku="@ViewData["SkuFilter"]"
+   class="btn @nextDisabled">
+    Next
+</a>
+<p>Showing @currentShownLow - @currentShownHigh of @Model.TotalCount records</p>
