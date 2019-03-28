@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 namespace CommentSold.WebTest.Controllers
 {
     [Authorize]
-    [Route("inventory")]
     public class InventoryController : Controller
     {
         private readonly IInventoryRepository _inventoryRepository;
@@ -42,12 +41,12 @@ namespace CommentSold.WebTest.Controllers
             return View(inventoryForUser);
         }
 
-        [HttpGet("Id")]
-        public async Task<IActionResult> Details(int Id)
+        [HttpGet()]
+        public async Task<IActionResult> Details(int id)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var inventoryItemForUserFromRepo = _inventoryRepository.GetInventoryItemForUser(user.Id, Id);
+            var inventoryItemForUserFromRepo = _inventoryRepository.GetInventoryItemForUser(user.Id, id);
 
             var inventoryItemForUser = Mapper.Map<InventoryDto>(inventoryItemForUserFromRepo);
 

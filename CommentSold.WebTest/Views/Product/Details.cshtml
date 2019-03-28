@@ -8,7 +8,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>ProductDto</h4>
+    <h4>Product</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -29,6 +29,22 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Brand)
         </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Inventories)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var inventory in Model.Inventories)
+            {
+                <a asp-controller="Inventory" asp-action="Details" asp-route-id="@inventory.Id">
+                    @Html.DisplayFor(i => inventory.SKU)
+                </a>
+                <text> (</text>
+                @Html.DisplayFor(i => inventory.Quantity)
+                <text> units) <br /></text>
+            }
+           
+        </dd>
+
     </dl>
 </div>
 <div>

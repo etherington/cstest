@@ -121,27 +121,14 @@ namespace CommentSold.WebTest
                     .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src =>
                         src.Product.ProductName))
                     .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src =>
-                        src.Product.Id)); 
+                        src.Product.Id));
                 cfg.CreateMap<Product, ProductDto>();
+                cfg.CreateMap<Inventory, SkuDto>();
+                  
                 cfg.CreateMap<PagedList<Product>, PagedList<ProductDto>>()
                     .ConvertUsing<PagedListAutomapperConverter<Product, ProductDto>>();
                 cfg.CreateMap<PagedList<Inventory>, PagedList<InventoryDto>>()
                     .ConvertUsing<PagedListAutomapperConverter<Inventory, InventoryDto>>();
-                //cfg.CreateMap<Entities.Author, Models.AuthorDto>()
-                //    .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
-                //        $"{src.FirstName} {src.LastName}"))
-                //    .ForMember(dest => dest.Age, opt => opt.MapFrom(src =>
-                //        src.DateOfBirth.GetCurrentAge()));
-
-                //cfg.CreateMap<Entities.Book, Models.BookDto>();
-
-                //cfg.CreateMap<Models.AuthorForCreationDto, Entities.Author>();
-
-                //cfg.CreateMap<Models.BookForCreationDto, Entities.Book>();
-
-                //cfg.CreateMap<Models.BookForUpdateDto, Entities.Book>();
-
-                //cfg.CreateMap<Entities.Book, Models.BookForUpdateDto>();
             });
 
             app.UseAuthentication();

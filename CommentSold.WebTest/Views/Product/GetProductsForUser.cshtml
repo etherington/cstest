@@ -1,20 +1,16 @@
 ﻿@model CommentSold.WebTest.Services.PagedList<CommentSold.WebTest.Dto.ProductDto>
-
 @{
     ViewData["Title"] = "GetProductsForUser";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<link rel="stylesheet" href="css/productsList.css">
 <h1>Products For User</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                Product Name
+              Product Name
             </th>
             <th>
                 Style
@@ -22,30 +18,64 @@
             <th>
                 Brand
             </th>
+            <th>
+               Skus
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Style)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brand)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
+        <div id="accordion">
+            @foreach (var item in Model)
+            {
+                var skusDivId = "skus" + item.Id;
+                var skusDivIdHash = "#skus" + item.Id;
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Style)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Brand)
+                    </td>
+                    <td>
+                        <div class="panel-title">
+                            <button class="btn btn-link p-0 @(item.Inventories.Count == 0 ? "disabled" : "")" data-toggle="collapse" data-target="@skusDivIdHash" aria-expanded="false" aria-controls="@skusDivId">
+                                @if (item.Inventories.Count == 0)
+                                {
+                                    <text>No Skus</text>
+                                }
+                                else
+                                {
+                                    @item.Inventories.Count
+                                    <text> SKUs (</text>
+                                    @item.Inventories.Sum(x => x.Quantity)
+                                    <text> total items)</text>
+                                }
+                            </button>
+                        </div>
+                        <div class="collapse" id="@skusDivId" data-parent="#accordion">
+                            @foreach (var inventory in item.Inventories)
+                            {
+                                <a asp-controller="Inventory" asp-action="Details" asp-route-id="@inventory.Id">
+                                    @Html.DisplayFor(i => inventory.SKU)
+                                </a>
+                                <text> (</text>
+                                @Html.DisplayFor(i => inventory.Quantity)
+                                <text> units) <br/></text>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+            }
+    </div>
+</tbody>
 </table>
 @{
     var prevDisabled = !Model.HasPrevious ? "disabled" : "";
@@ -71,3 +101,5 @@
     Next
 </a>
 <p>Showing @currentShownLow - @currentShownHigh  of @Model.TotalCount</p>
+
+<

@@ -1,5 +1,4 @@
-﻿
-namespace CommentSold.WebTest.Services
+﻿namespace CommentSold.WebTest.Services
 {
     public class GetPagedListParameters
     {
@@ -12,5 +11,7 @@ namespace CommentSold.WebTest.Services
             get => _pageSize;
             set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
         }
+
+        public virtual string ToKey() => PageNumber + "." + PageSize;
     }
 }

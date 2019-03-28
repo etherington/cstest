@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 namespace CommentSold.WebTest.Controllers
 {
     [Authorize]
-    [Route("products")]
     public class ProductController : Controller
     {
         private readonly IProductRepository _productRepository;
@@ -38,7 +37,7 @@ namespace CommentSold.WebTest.Controllers
             return View(productsForUser);
         }
 
-        [HttpGet("id")]
+        [HttpGet()]
         public async Task<IActionResult> Details(int id)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);

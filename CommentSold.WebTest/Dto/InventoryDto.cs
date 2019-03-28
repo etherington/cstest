@@ -1,9 +1,13 @@
-﻿namespace CommentSold.WebTest.Dto
+﻿using System.ComponentModel;
+
+namespace CommentSold.WebTest.Dto
 {
     public class InventoryDto
     {
         public int Id { get; set; }
+        [DisplayName("Product Name")]
         public string ProductName { get; set; }
+        [DisplayName("Product Id")]
         public int ProductId { get; set; }
 
         public string Sku { get; set; }
@@ -19,12 +23,5 @@
          => string.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", PriceCents/100.0);
         public string CostInDollars
             => string.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", CostCents / 100.0);
-        
-        // public uint SalePriceCents { get; set; }
-        //public uint Weight { get; set; }
-        //public uint Length { get; set; }
-        //public uint Width { get; set; }
-        //public uint Height { get; set; }
-        //public string Note { get; set; }
     }
 }

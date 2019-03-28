@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using CommentSold.WebTest.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommentSold.WebTest.Services
 {
@@ -15,7 +16,7 @@ namespace CommentSold.WebTest.Services
         public PagedList<Product> GetProductsForUser(int userId, GetProductParameters getProductParameters)
         {
             var collectionBeforePaging =
-                _context.Products
+                _context.Products.Include(p=>p.Inventories)
                     .Where(p=>p.Admin.Id == userId)
                     .OrderBy(a => a.ProductName)
                     .AsQueryable();
@@ -27,7 +28,7 @@ namespace CommentSold.WebTest.Services
 
         public Product GetProductForUser(int userId, int productId)
         {
-            var product = _context.Products
+            var product = _context.Products.Include(p => p.Inventories)
                 .FirstOrDefault(p => p.Id == productId && p.Admin.Id == userId);
             return product;
         }
