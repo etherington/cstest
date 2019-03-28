@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using CommentSold.WebTest.Data;
+using CommentSold.WebTest.Dto;
+using CommentSold.WebTest.Helpers;
 using Microsoft.EntityFrameworkCore;
 
-namespace CommentSold.WebTest.Services
+namespace CommentSold.WebTest.Repositories
 {
     public class InventoryRepository : IInventoryRepository
     {

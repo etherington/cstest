@@ -1,8 +1,10 @@
 ﻿using System;
 using CommentSold.WebTest.Data;
+using CommentSold.WebTest.Dto;
+using CommentSold.WebTest.Helpers;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace CommentSold.WebTest.Services
+namespace CommentSold.WebTest.Repositories
 {
     public class CachedProductRepositoryDecorator:IProductRepository
     {

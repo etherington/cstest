@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using CommentSold.WebTest.Services;
+using CommentSold.WebTest.Dto;
 
 namespace CommentSold.WebTest.Helpers
 {

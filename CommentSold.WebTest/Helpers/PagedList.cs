@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CommentSold.WebTest.Services
+namespace CommentSold.WebTest.Helpers
 {
     public class PagedList<T> : List<T>
     {

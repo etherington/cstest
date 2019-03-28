@@ -1,4 +1,4 @@
-﻿namespace CommentSold.WebTest.Services
+﻿namespace CommentSold.WebTest.Dto
 {
     public class GetInventoryParameters: GetPagedListParameters
     {

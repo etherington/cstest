@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using CommentSold.WebTest.Data;
 using CommentSold.WebTest.Dto;
 using CommentSold.WebTest.Helpers;
-using CommentSold.WebTest.Services;
+using CommentSold.WebTest.Repositories;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

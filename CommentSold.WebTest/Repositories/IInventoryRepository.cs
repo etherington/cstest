@@ -1,6 +1,8 @@
 ﻿using CommentSold.WebTest.Data;
+using CommentSold.WebTest.Dto;
+using CommentSold.WebTest.Helpers;
 
-namespace CommentSold.WebTest.Services
+namespace CommentSold.WebTest.Repositories
 {
     public interface IInventoryRepository
     {

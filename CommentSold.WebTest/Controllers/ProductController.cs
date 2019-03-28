@@ -2,7 +2,8 @@
 using AutoMapper;
 using CommentSold.WebTest.Data;
 using CommentSold.WebTest.Dto;
-using CommentSold.WebTest.Services;
+using CommentSold.WebTest.Helpers;
+using CommentSold.WebTest.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
