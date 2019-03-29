@@ -73,10 +73,12 @@ namespace CommentSold.WebTest
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
-            
+
             //  services.AddSingleton<IEmailSender, EmailSender>();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IInventoryRepository, InventoryRepository>();
+            //  services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IAsyncProductRepository, AsyncProductRepository>();
+            // services.AddScoped<IInventoryRepository, InventoryRepository>();
+            services.AddScoped<IAsyncInventoryRepository, AsyncInventoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

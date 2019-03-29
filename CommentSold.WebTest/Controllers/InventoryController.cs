@@ -14,11 +14,11 @@ namespace CommentSold.WebTest.Controllers
     [Authorize]
     public class InventoryController : Controller
     {
-        private readonly IInventoryRepository _inventoryRepository;
+        private readonly IAsyncInventoryRepository _inventoryRepository;
         private ILogger<InventoryController> _logger;
         private readonly UserManager<ApplicationIdentityUser> _userManager;
 
-        public InventoryController(IInventoryRepository inventoryRepository,
+        public InventoryController(IAsyncInventoryRepository inventoryRepository,
             ILogger<InventoryController> logger, UserManager<ApplicationIdentityUser> userManager)
         {
             _logger = logger;
@@ -35,7 +35,7 @@ namespace CommentSold.WebTest.Controllers
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var inventoryForUserFromRepo = _inventoryRepository.GetInventoryForUser(user.Id, inventoryParameters);
+            var inventoryForUserFromRepo = await _inventoryRepository.GetInventoryForUserAsync(user.Id, inventoryParameters);
 
             var inventoryForUser = Mapper.Map<PagedList<InventoryDto>>(inventoryForUserFromRepo);
            
@@ -47,7 +47,7 @@ namespace CommentSold.WebTest.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var inventoryItemForUserFromRepo = _inventoryRepository.GetInventoryItemForUser(user.Id, id);
+            var inventoryItemForUserFromRepo = await _inventoryRepository.GetInventoryItemForUserAsync(user.Id, id);
 
             var inventoryItemForUser = Mapper.Map<InventoryDto>(inventoryItemForUserFromRepo);
 
