@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
-namespace CommentSold.WebTest.Repositories
+namespace CommentSold.WebTest.Repositories.Caching
 {
     public class AzureCacheStorage: IAzureCacheStorage
     {

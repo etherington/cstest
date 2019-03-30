@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using CommentSold.WebTest.Data;
 using CommentSold.WebTest.Dto;
 using CommentSold.WebTest.Helpers;
 using Newtonsoft.Json;
 
-namespace CommentSold.WebTest.Repositories
+namespace CommentSold.WebTest.Repositories.Caching
 {
-    public class ReadonlyProductStore
+    public class ReadonlyProductStore: IProductDtoRepository
     {
         private readonly IAzureCacheStorage _cacheStorage;
         private readonly IProductRepository _productRepository;
@@ -24,7 +21,7 @@ namespace CommentSold.WebTest.Repositories
         public async Task<PagedList<ProductDto>> GetProductsForUserAsync(int userId, GetProductParameters getProductParameters)
         {
             PagedList<ProductDto> result;
-            string key = "user:" + userId + ":pageNumber" + getProductParameters.PageNumber + ":pageSize" +
+            string key = "user:" + userId + "|pageNumber:" + getProductParameters.PageNumber + "|pageSize:" +
                          getProductParameters.PageSize;
 
             var cachedResults = await _cacheStorage.GetObjectAsync<PagedList<ProductDto>>(key);
@@ -45,7 +42,21 @@ namespace CommentSold.WebTest.Repositories
 
         public async Task<ProductDto> GetProductForUserAsync(int userId, int productId)
         {
-            throw new NotImplementedException();
+            ProductDto product;
+            string key = "user:" + userId + "|productId:" + productId;
+
+            var cachedResult = await _cacheStorage.GetObjectAsync<ProductDto>(key);
+            if (cachedResult!=null)
+            {
+                product = cachedResult;
+            }
+            else
+            {
+                var productForUserFromRepo = await _productRepository.GetProductForUserAsync(userId, productId);
+                product = Mapper.Map<ProductDto>(productForUserFromRepo);
+                await _cacheStorage.SetStringAsync(key, JsonConvert.SerializeObject(product));
+            }
+            return product;
         }
     }
 }

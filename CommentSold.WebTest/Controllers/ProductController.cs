@@ -2,24 +2,23 @@
 using CommentSold.WebTest.Data;
 using CommentSold.WebTest.Dto;
 using CommentSold.WebTest.Repositories;
+using CommentSold.WebTest.Repositories.Caching;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
 
 namespace CommentSold.WebTest.Controllers
 {
     [Authorize]
     public class ProductController : Controller
     {
-       
         private ILogger<ProductController> _logger;
         private readonly UserManager<ApplicationIdentityUser> _userManager;
-        private readonly ReadonlyProductStore _productStore;
+        private readonly IProductDtoRepository _productStore;
 
-        public ProductController(ILogger<ProductController> logger, UserManager<ApplicationIdentityUser> userManager, 
-           ReadonlyProductStore productStore)
+        public ProductController(ILogger<ProductController> logger, UserManager<ApplicationIdentityUser> userManager,
+            IProductDtoRepository productStore)
         {
             _logger = logger;
             _userManager = userManager;

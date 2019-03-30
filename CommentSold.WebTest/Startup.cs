@@ -10,6 +10,7 @@ using CommentSold.WebTest.Data;
 using CommentSold.WebTest.Dto;
 using CommentSold.WebTest.Helpers;
 using CommentSold.WebTest.Repositories;
+using CommentSold.WebTest.Repositories.Caching;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -89,12 +90,10 @@ namespace CommentSold.WebTest
             });
 
             //  services.AddSingleton<IEmailSender, EmailSender>();
-
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IInventoryRepository, InventoryRepository>();
-            services.AddScoped<ReadonlyProductStore>();
-            //services.AddScoped<ProductRepository>();
-
+            services.AddScoped<IProductDtoRepository, ReadonlyProductStore>();
+            services.AddScoped<IInventoryDtoRepository, ReadonlyInventoryStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

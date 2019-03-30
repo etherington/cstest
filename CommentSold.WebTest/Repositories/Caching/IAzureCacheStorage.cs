@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CommentSold.WebTest.Repositories
+namespace CommentSold.WebTest.Repositories.Caching
 {
     public interface IAzureCacheStorage
     {

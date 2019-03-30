@@ -4,6 +4,7 @@ using CommentSold.WebTest.Data;
 using CommentSold.WebTest.Dto;
 using CommentSold.WebTest.Helpers;
 using CommentSold.WebTest.Repositories;
+using CommentSold.WebTest.Repositories.Caching;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,15 +15,15 @@ namespace CommentSold.WebTest.Controllers
     [Authorize]
     public class InventoryController : Controller
     {
-        private readonly IInventoryRepository _inventoryRepository;
+        private readonly IInventoryDtoRepository _inventoryStore;
         private ILogger<InventoryController> _logger;
         private readonly UserManager<ApplicationIdentityUser> _userManager;
 
-        public InventoryController(IInventoryRepository inventoryRepository,
+        public InventoryController(IInventoryDtoRepository inventoryStore,
             ILogger<InventoryController> logger, UserManager<ApplicationIdentityUser> userManager)
         {
             _logger = logger;
-            _inventoryRepository = inventoryRepository;
+            _inventoryStore = inventoryStore;
             _userManager = userManager;
         }
 
@@ -34,24 +35,20 @@ namespace CommentSold.WebTest.Controllers
             ViewData["ProductIdFilter"] = inventoryParameters.ProductId;
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-
-            var inventoryForUserFromRepo = await _inventoryRepository.GetInventoryForUserAsync(user.Id, inventoryParameters);
-
-            var inventoryForUser = Mapper.Map<PagedList<InventoryDto>>(inventoryForUserFromRepo);
-           
-            return View(inventoryForUser);
+            var inventories = await _inventoryStore.GetInventoryForUserAsync(user.Id, inventoryParameters);
+         
+            return View(inventories);
         }
 
         [HttpGet()]
         public async Task<IActionResult> Details(int id)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
+            var inventory = await _inventoryStore.GetInventoryItemForUserAsync(user.Id, id);
 
-            var inventoryItemForUserFromRepo = await _inventoryRepository.GetInventoryItemForUserAsync(user.Id, id);
+            //TODO: explicitly handle id doesn't exist
 
-            var inventoryItemForUser = Mapper.Map<InventoryDto>(inventoryItemForUserFromRepo);
-
-            return View(inventoryItemForUser);
+            return View(inventory);
         }
     }
 }
