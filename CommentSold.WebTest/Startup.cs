@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace CommentSold.WebTest
 {
@@ -55,6 +56,19 @@ namespace CommentSold.WebTest
                 options.Password.RequireLowercase = false;
             });
 
+            //services.AddDistributedRedisCache(option => {
+            //    option.Configuration = Configuration.GetConnectionString("RedisConnection");
+            //    option.InstanceName = "master";
+            //});
+            //services.AddStackExchangeRedisCache(options =>
+            //{
+            //    options.Configuration = "localhost";
+            //    options.InstanceName = "SampleInstance";
+            //});
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(Configuration.GetConnectionString("Redis")));
+
+            services.AddSingleton<IAzureCacheStorage, AzureCacheStorage>(options => new AzureCacheStorage(Configuration.GetConnectionString("Redis"), Constants.DEFAULT_CACHE_SECONDS));
+
             services.AddMvc(setupAction =>
                 {
                     setupAction.ReturnHttpNotAcceptable = true;
@@ -75,10 +89,12 @@ namespace CommentSold.WebTest
             });
 
             //  services.AddSingleton<IEmailSender, EmailSender>();
-            //  services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IAsyncProductRepository, AsyncProductRepository>();
-            // services.AddScoped<IInventoryRepository, InventoryRepository>();
-            services.AddScoped<IAsyncInventoryRepository, AsyncInventoryRepository>();
+
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IInventoryRepository, InventoryRepository>();
+            services.AddScoped<ReadonlyProductStore>();
+            //services.AddScoped<ProductRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

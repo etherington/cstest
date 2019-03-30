@@ -1,8 +1,10 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using CommentSold.WebTest.Data;
 using CommentSold.WebTest.Dto;
 using CommentSold.WebTest.Helpers;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace CommentSold.WebTest.Repositories
 {
@@ -15,11 +17,11 @@ namespace CommentSold.WebTest.Repositories
             _context = context;
         }
 
-        public PagedList<Inventory> GetInventoryForUser(int userId, GetInventoryParameters getInventoryParameters)
+        public Task<PagedList<Inventory>> GetInventoryForUserAsync(int userId, GetInventoryParameters getInventoryParameters)
         {
             var collectionBeforePaging =
                 _context.Inventory
-                    .Include(x=>x.Product)
+                    .Include(x => x.Product)
                     .Where(i => i.Product.Admin.Id == userId)
                     .OrderBy(a => a.Product.Id)
                     .AsQueryable();
@@ -50,17 +52,16 @@ namespace CommentSold.WebTest.Repositories
                     .Where(a => a.Quantity <= maximumQuantityQueryForWhereClause);
             }
 
-            return  PagedList<Inventory>.Create(collectionBeforePaging,
+            return PagedList<Inventory>.CreateAsync(collectionBeforePaging,
                 getInventoryParameters.PageNumber,
                 getInventoryParameters.PageSize);
         }
 
-        public Inventory GetInventoryItemForUser(int userId, int inventoryId)
+        public Task<Inventory> GetInventoryItemForUserAsync(int userId, int inventoryId)
         {
-            var inventoryItem = _context.Inventory.Include(i=>i.Product)
-                .FirstOrDefault(i => i.Id == inventoryId && i.Product.Admin.Id == userId);
+            var inventoryItem = _context.Inventory.Include(i => i.Product)
+                .FirstOrDefaultAsync(i => i.Id == inventoryId && i.Product.Admin.Id == userId);
             return inventoryItem;
         }
     }
 }
-

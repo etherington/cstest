@@ -3,7 +3,6 @@
     ViewData["Title"] = "GetProductsForUser";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<link rel="stylesheet" href="css/productsList.css">
 <h1>Products For User</h1>
 
 <table class="table">
@@ -53,7 +52,7 @@
                                     @item.Inventories.Count
                                     <text> SKUs (</text>
                                     @item.Inventories.Sum(x => x.Quantity)
-                                    <text> total items)</text>
+                                    <text> total units)</text>
                                 }
                             </button>
                         </div>

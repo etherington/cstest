@@ -14,11 +14,11 @@ namespace CommentSold.WebTest.Controllers
     [Authorize]
     public class InventoryController : Controller
     {
-        private readonly IAsyncInventoryRepository _inventoryRepository;
+        private readonly IInventoryRepository _inventoryRepository;
         private ILogger<InventoryController> _logger;
         private readonly UserManager<ApplicationIdentityUser> _userManager;
 
-        public InventoryController(IAsyncInventoryRepository inventoryRepository,
+        public InventoryController(IInventoryRepository inventoryRepository,
             ILogger<InventoryController> logger, UserManager<ApplicationIdentityUser> userManager)
         {
             _logger = logger;
