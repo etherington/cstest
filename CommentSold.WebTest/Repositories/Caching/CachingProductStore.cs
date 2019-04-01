@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using CommentSold.WebTest.Dto;
@@ -67,28 +68,29 @@ namespace CommentSold.WebTest.Repositories.Caching
             string key = "user:" + userId + "|product" + "|productId:" + productId;
             await _cacheStorage.DeleteAsync(key);
 
-            //var invalidateCalls = new List<Task>();
-            //var keys = _cacheStorage.ListKeys();
-            //if (keys != null && keys.Count > 0)
-            //{
-            //    foreach (var k in keys)
-            //    {
-            //        var parts = k.Split('|');
-            //        if (parts != null && parts.Length > 0)
-            //        {
-            //            var userPart = parts[0].Split(':');
-            //            if (userPart != null && userPart.Length > 1)
-            //            {
-            //                if (userPart[1] == userId.ToString())
-            //                {
-            //                    invalidateCalls.Add(_cacheStorage.DeleteAsync(k)); // this does all cache for this user
 
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-            //await Task.WhenAll(invalidateCalls);
+            // Delete all cache entries for this user
+            var invalidateCalls = new List<Task>();
+            var keys = _cacheStorage.ListKeys();
+            if (keys != null && keys.Count > 0)
+            {
+                foreach (var k in keys)
+                {
+                    var parts = k.Split('|');
+                    if (parts != null && parts.Length > 0)
+                    {
+                        var userPart = parts[0].Split(':');
+                        if (userPart != null && userPart.Length > 1)
+                        {
+                            if (userPart[1] == userId.ToString())
+                            {
+                                invalidateCalls.Add(_cacheStorage.DeleteAsync(k)); // this deletes all cache entries for this user
+                            }
+                        }
+                    }
+                }
+            }
+            await Task.WhenAll(invalidateCalls);
         }
     }
 }

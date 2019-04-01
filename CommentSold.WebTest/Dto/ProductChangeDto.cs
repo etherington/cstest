@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace CommentSold.WebTest.Dto
 {
@@ -7,6 +8,7 @@ namespace CommentSold.WebTest.Dto
     /// </summary>
     public class ProductChangeDto
     {
+        [DisplayName("Product Name")]
         [Required]
         [MaxLength(255, ErrorMessage = "The {0} shouldn't have more than {1} characters")]
         public string ProductName { get; set; }
@@ -26,10 +28,12 @@ namespace CommentSold.WebTest.Dto
         [MaxLength(2000, ErrorMessage = "The {0} shouldn't have more than {1} characters")]
         public string Url { get; set; }
 
+        [DisplayName("Product Type")]
         [Required]
         [MaxLength(50, ErrorMessage = "The {0} shouldn't have more than {1} characters")]
         public string ProductType { get; set; }
 
+        [DisplayName("Shipping Price (cents)")]
         [Required]
         [Range(0, Constants.MaxPriceInCents, ErrorMessage = "The {0} must be between {1} and {2}")]
         public uint ShippingPriceCents { get; set; }
