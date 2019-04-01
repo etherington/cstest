@@ -7,12 +7,15 @@ using Newtonsoft.Json;
 
 namespace CommentSold.WebTest.Repositories.Caching
 {
-    public class ReadonlyInventoryStore: IInventoryDtoRepository
+    /// <summary>
+    /// A cache-proxied readonly repository for inventory queries. 
+    /// </summary>
+    public class CachingInventoryStore: ICachingInventoryRepository
     {
-        private readonly IAzureCacheStorage _cacheStorage;
+        private readonly ICacheStorage _cacheStorage;
         private readonly IInventoryRepository _inventoryRepository;
 
-        public ReadonlyInventoryStore(IAzureCacheStorage cacheStorage, IInventoryRepository inventoryRepository)
+        public CachingInventoryStore(ICacheStorage cacheStorage, IInventoryRepository inventoryRepository)
         {
             _cacheStorage = cacheStorage ?? throw new ArgumentNullException(nameof(cacheStorage));
             _inventoryRepository = inventoryRepository ?? throw new ArgumentNullException(nameof(inventoryRepository));
@@ -21,7 +24,7 @@ namespace CommentSold.WebTest.Repositories.Caching
         public async Task<PagedList<InventoryDto>> GetInventoryForUserAsync(int userId, GetInventoryParameters getInventoryParameters)
         {
             PagedList<InventoryDto> result;
-            string key = "user:" + userId + "|pageNumber" + getInventoryParameters.PageNumber + "|pageSize:" +
+            string key =  "user:" + userId  + "|inventoryList" + "|pageNumber" + getInventoryParameters.PageNumber + "|pageSize:" +
                          getInventoryParameters.PageSize +
                          (!string.IsNullOrEmpty(getInventoryParameters.Sku)
                              ? "|sku:" + getInventoryParameters.Sku
@@ -51,7 +54,7 @@ namespace CommentSold.WebTest.Repositories.Caching
         public async Task<InventoryDto> GetInventoryItemForUserAsync(int userId, int inventoryId)
         {
             InventoryDto inventory;
-            string key = "user:" + userId + ":inventoryId:" + inventoryId;
+            string key = "user:" + userId + "|inventory" + "|inventoryId:" + inventoryId;
 
             var cachedResult = await _cacheStorage.GetObjectAsync<InventoryDto>(key);
             if (cachedResult != null)

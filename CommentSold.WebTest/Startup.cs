@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CommentSold.WebTest.Data;
@@ -12,6 +12,7 @@ using CommentSold.WebTest.Helpers;
 using CommentSold.WebTest.Repositories;
 using CommentSold.WebTest.Repositories.Caching;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -56,19 +57,10 @@ namespace CommentSold.WebTest
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = false;
             });
-
-            //services.AddDistributedRedisCache(option => {
-            //    option.Configuration = Configuration.GetConnectionString("RedisConnection");
-            //    option.InstanceName = "master";
-            //});
-            //services.AddStackExchangeRedisCache(options =>
-            //{
-            //    options.Configuration = "localhost";
-            //    options.InstanceName = "SampleInstance";
-            //});
+         
+            //Redis cache setup
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(Configuration.GetConnectionString("Redis")));
-
-            services.AddSingleton<IAzureCacheStorage, AzureCacheStorage>(options => new AzureCacheStorage(Configuration.GetConnectionString("Redis"), Constants.DEFAULT_CACHE_SECONDS));
+            services.AddSingleton<ICacheStorage, AzureCacheStorage>(options => new AzureCacheStorage(Configuration.GetConnectionString("Redis"), Constants.DefaultCacheSeconds));
 
             services.AddMvc(setupAction =>
                 {
@@ -89,11 +81,16 @@ namespace CommentSold.WebTest
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
-            //  services.AddSingleton<IEmailSender, EmailSender>();
+            //Flash message injection
+            services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<Vereyon.Web.IFlashMessage, Vereyon.Web.FlashMessage>();
+
+            //Repositories and cache injection
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IInventoryRepository, InventoryRepository>();
-            services.AddScoped<IProductDtoRepository, ReadonlyProductStore>();
-            services.AddScoped<IInventoryDtoRepository, ReadonlyInventoryStore>();
+            services.AddScoped<ICachingProductRepository, CachingProductStore>();
+            services.AddScoped<ICachingInventoryRepository, CachingInventoryStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -140,13 +137,24 @@ namespace CommentSold.WebTest
                     .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src =>
                         src.Product.Id));
                 cfg.CreateMap<Product, ProductDto>();
+                cfg.CreateMap<ProductDto, ProductForListDto>(); 
+
+                cfg.CreateMap<ProductDto, ProductForEditDto>(MemberList.Destination) 
+                    .ForSourceMember(x => x.Inventories, opt => opt.DoNotValidate());
+             
                 cfg.CreateMap<Inventory, SkuDto>();
-                  
+
+                cfg.CreateMap<PagedList<Product>, PagedList<ProductForListDto>>()
+                    .ConvertUsing<PagedListAutomapperConverter<Product, ProductForListDto>>();
                 cfg.CreateMap<PagedList<Product>, PagedList<ProductDto>>()
                     .ConvertUsing<PagedListAutomapperConverter<Product, ProductDto>>();
+                cfg.CreateMap<PagedList<ProductDto>, PagedList<ProductForListDto>>()
+                    .ConvertUsing<PagedListAutomapperConverter<ProductDto, ProductForListDto>>();
                 cfg.CreateMap<PagedList<Inventory>, PagedList<InventoryDto>>()
                     .ConvertUsing<PagedListAutomapperConverter<Inventory, InventoryDto>>();
             });
+
+            AutoMapper.Mapper.AssertConfigurationIsValid();
 
             app.UseAuthentication();
 

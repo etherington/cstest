@@ -7,7 +7,10 @@ using StackExchange.Redis;
 
 namespace CommentSold.WebTest.Repositories.Caching
 {
-    public class AzureCacheStorage: IAzureCacheStorage
+    /// <summary>
+    /// Provides methods for interacting with the Azure Redis Cache.
+    /// </summary>
+    public class AzureCacheStorage: ICacheStorage
     {
         private readonly string _connectionString;
         private readonly TimeSpan _expiryTimeSpanInSeconds;
@@ -21,7 +24,6 @@ namespace CommentSold.WebTest.Repositories.Caching
             _expiryTimeSpanInSeconds = TimeSpan.FromSeconds(defaultExpiryInSeconds);
             Initialize();
         }
-
         private void Initialize()
         {
             _connection = ConnectionMultiplexer.Connect(_connectionString);
@@ -70,7 +72,6 @@ namespace CommentSold.WebTest.Repositories.Caching
             }
             return list;
         }
-
         public Dictionary<string, string> ListKeyValues()
         {
             var list = new Dictionary<string, string>();

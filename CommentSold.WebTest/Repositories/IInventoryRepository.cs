@@ -5,6 +5,9 @@ using CommentSold.WebTest.Helpers;
 
 namespace CommentSold.WebTest.Repositories
 {
+    /// <summary>
+    /// Repository for Inventory. 
+    /// </summary>
     public interface IInventoryRepository
     {
         Task<PagedList<Inventory>> GetInventoryForUserAsync(int userId, GetInventoryParameters getInventoryParameters);

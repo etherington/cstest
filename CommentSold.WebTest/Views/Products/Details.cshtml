@@ -1,4 +1,5 @@
-﻿@model CommentSold.WebTest.Dto.ProductDto
+﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
+@model CommentSold.WebTest.Dto.ProductForListDto
 
 @{
     ViewData["Title"] = "Details";
@@ -6,7 +7,9 @@
 }
 
 <h1>Details</h1>
-
+<div>
+    @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+</div>
 <div>
     <h4>Product</h4>
     <hr />
@@ -33,16 +36,23 @@
             @Html.DisplayNameFor(model => model.Inventories)
         </dt>
         <dd class="col-sm-10">
-            @foreach (var inventory in Model.Inventories)
+            @if (Model.Inventories.Count == 0)
             {
-                <a asp-controller="Inventory" asp-action="Details" asp-route-id="@inventory.Id">
-                    @Html.DisplayFor(i => inventory.SKU)
-                </a>
-                <text> (</text>
-                @Html.DisplayFor(i => inventory.Quantity)
-                <text> units) <br /></text>
+                <text>No Skus</text>
             }
-           
+            else
+            {
+                foreach (var inventory in Model.Inventories)
+                 {
+                     <a asp-controller="Inventory" asp-action="Details" asp-route-id="@inventory.Id">
+                         @Html.DisplayFor(i => inventory.SKU)
+                     </a>
+                     <text> (</text>
+                     @Html.DisplayFor(i => inventory.Quantity)
+                     <text> units) <br/></text>
+                 }
+            }
+
         </dd>
 
     </dl>

@@ -5,9 +5,11 @@ using CommentSold.WebTest.Dto;
 using CommentSold.WebTest.Helpers;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace CommentSold.WebTest.Repositories
 {
+    /// <summary>
+    /// Repository for Inventory. 
+    /// </summary>
     public class InventoryRepository : IInventoryRepository
     {
         private readonly ApplicationDbContext _context;
@@ -24,6 +26,7 @@ namespace CommentSold.WebTest.Repositories
                     .Include(x => x.Product)
                     .Where(i => i.Product.Admin.Id == userId)
                     .OrderBy(a => a.Product.Id)
+                    .AsNoTracking()
                     .AsQueryable();
 
             if (!string.IsNullOrEmpty(getInventoryParameters.Sku))
@@ -60,6 +63,7 @@ namespace CommentSold.WebTest.Repositories
         public Task<Inventory> GetInventoryItemForUserAsync(int userId, int inventoryId)
         {
             var inventoryItem = _context.Inventory.Include(i => i.Product)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(i => i.Id == inventoryId && i.Product.Admin.Id == userId);
             return inventoryItem;
         }

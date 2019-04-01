@@ -7,6 +7,10 @@ using Newtonsoft.Json;
 
 namespace CommentSold.WebTest.Helpers
 {
+    /// <summary>
+    /// The PagedList class allows for paging of queries through lazy evaluation of an IQueryable source.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     [JsonObject(MemberSerialization = MemberSerialization.Fields)]
     public class PagedList<T> : List<T>
     {
@@ -14,9 +18,7 @@ namespace CommentSold.WebTest.Helpers
         public int TotalPages { get; private set; }
         public int PageSize { get; private set; }
         public int TotalCount { get; private set; }
-
         
-
         public bool HasPrevious => (CurrentPage > 1);
 
         public bool HasNext => (CurrentPage < TotalPages);

@@ -1,5 +1,8 @@
 ﻿namespace CommentSold.WebTest.Dto
 {
+    /// <summary>
+    /// Base class for types that specify filter parameters for queries; provides the paging filters.
+    /// </summary>
     public class GetPagedListParameters
     {
         const int MaxPageSize = 20;

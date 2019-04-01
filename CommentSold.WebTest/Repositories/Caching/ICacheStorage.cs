@@ -3,7 +3,10 @@ using System.Threading.Tasks;
 
 namespace CommentSold.WebTest.Repositories.Caching
 {
-    public interface IAzureCacheStorage
+    /// <summary>
+    /// Provides methods for interacting with a cache.
+    /// </summary>
+    public interface ICacheStorage
     {
         Task SetStringAsync(string key, string value);
         Task SetObjectAsync(string key, object value);

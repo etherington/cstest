@@ -2,6 +2,9 @@
 
 namespace CommentSold.WebTest.Dto
 {
+    /// <summary>
+    /// Data transfer object for Inventory queries.
+    /// </summary>
     public class InventoryDto
     {
         public int Id { get; set; }

@@ -13,34 +13,34 @@
       asp-route-productId="@ViewData["ProductIdFilter"]"
       method="get">
     <div class="row">
-        <div class="col-3">
+        <div class="col-4">
             Find by SKU: 
         </div>
-        <div class="col-9 float-left">
+        <div class="col-8 float-left">
             <input type="text" name="sku" value="@ViewData["SkuFilter"]"/>
         </div>
     </div>
     <div class="row">
-        <div class="col-3">
-            Filter by ProductId:
+        <div class="col-4">
+            Filter by Product Id:
         </div>
-        <div class="col-9 float-left">
+        <div class="col-8 float-left">
             <input type="text" name="productId" value="@ViewData["ProductIdFilter"]" />
         </div>
     </div>
     <div class="row">
-        <div class="col-3">
-            Only show if quantity is less than: 
+        <div class="col-4">
+            Only show if quantity is less than or equal to: 
         </div>
-        <div class="col-9 float-left">
+        <div class="col-8 float-left">
             <input type="text" name="MaximumQuantity" value="@ViewData["MaximumQuantityFilter"]" />
         </div>
     </div>
     <div class="row mt-2">
-        <div class="col-3">
+        <div class="col-4">
             <a asp-action="GetInventoryForUser">Back to Full List</a>
         </div>
-        <div class="col-9 float-left">
+        <div class="col-8 float-left">
             <input type="submit" value="Search" class="btn" />
         </div>
     </div>
